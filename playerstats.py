@@ -23,6 +23,9 @@ test_example_data["All-Star"] = test_example_data['All-Star'].fillna(0)
 # at this point we should remove player name from the data
 # and should also remove 'honorary' all-star selections that were based on
 # name recognition like Dwayne Wade's final year and Yao Ming in 2011
+# also change year to a numerical value since the start of the dataset? so its from 0-22 ish?
+
+# todo here we standardize data so the appropriate columns have mean=0 std=1
 
 # test_result = test_example_data
 # test_result = test_example_data[test_example_data['All-Star'] == 1]
