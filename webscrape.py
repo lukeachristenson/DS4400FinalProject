@@ -1,3 +1,5 @@
+import pandas as pd
+
 player_list = """LeBron James^	20	2005–2024	20 consecutive starts, Team captain in 2018,[9] 2019,[10] 2020,[11] 2021,[12] 2022, 2023, and 2024 games. MVP of 2006, 2008, and 2018 games.	[13]
 Kareem Abdul-Jabbar*[a]	19	1970–1977; 1979–1989	Missed 1973[14] game. Replacement selection in 1989 game	[15]
 Kobe Bryant*	18	1998; 2000–2016	Missed 2010,[16] 2014,[17] and 2015[18] games. MVP of 2002, 2007, 2009 (co-MVP with Shaquille O'Neal), and 2011 games.	[19]
@@ -500,7 +502,65 @@ for player in players:
             year_data[each] = [name]
     # print(name, years)
 
-#data sorted by year
-print(year_data)
-#data sorted by player
-print(player_data)
+# data sorted by year
+#print(year_data)
+# data sorted by player
+#print(player_data)
+
+# create all star dataframe from player data
+all_star_data = {'Player': [], 'Year': [], 'All-Star': []}
+
+for player in player_data.keys():
+    for year in player_data[player]:
+        if year > 1998:
+            all_star_data['Player'].append(player)
+            all_star_data['Year'].append(year)
+            all_star_data['All-Star'].append(1)
+
+all_star_df = pd.DataFrame(all_star_data)
+
+# get player season stats from online dataset
+player_stats_df = pd.read_csv('https://query.data.world/s/ksxh26pj3drsht2otdqfe2iwbjpt6f?dws=00000')
+
+# change year format from YYY1-YYY2 to YYY2
+player_stats_df["Year"] = player_stats_df['Year'].apply(lambda x: int(x.split("-")[1]))
+
+# the big join
+all_data = pd.merge(player_stats_df, all_star_df,
+                    how='left', left_on=['Player', 'Year'], right_on=['Player', 'Year'])
+
+# all star column needs to be 1s and 0s, fillna with 0
+all_data["All-Star"] = all_data['All-Star'].fillna(0)
+
+# remove 'honorary' all-star selections that were based on name recognition alone
+honorary_all_stars = {"Yao Ming": [2011], "Dwayne Wade": [2019], "Dirk Nowitzki": [2019], "Alonzo Mourning": [2001],
+                      "Kobe Bryant": [2014, 2016], "Allen Iverson": [2010]}
+
+for player in honorary_all_stars.keys():
+    for year in honorary_all_stars[player]:
+        all_data = all_data.drop(all_data[(all_data.Player == player) & (all_data.Year == year)].index)
+
+# drop lines that refer to partial seasons due to midseason trades (always listed after season averages)
+all_data = all_data.drop_duplicates(subset=['Player', 'Year'])
+
+# remove unnecessary cols and split data into X, y:
+feature_cols = ['Age', 'G', 'GS', 'MP', 'FG', 'FGA', 'FG%',
+       '3P', '3PA', '3P%', '2P', '2PA', '2P%', 'eFG%', 'FT', 'FTA', 'FT%',
+       'ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS', 'Year']
+label_col = 'All-Star'
+
+feature_data = all_data[feature_cols]
+feature_data = feature_data.astype(float)  # convert all cols to floats
+label_data = all_data[label_col]
+
+# standardize data for mean=0 std=1
+for i in range(len(feature_cols)):
+    feature = feature_cols[i]
+    mean = feature_data.loc[:, feature].mean()
+    std = feature_data[feature].std()
+
+    for j in range(len(feature_data[feature])):
+        feature_data.iat[j, i] = (feature_data.iat[j, i] - mean) / std
+
+print(feature_data)
+print(label_data)
