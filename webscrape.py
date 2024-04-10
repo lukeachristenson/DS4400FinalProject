@@ -503,9 +503,9 @@ for player in players:
     # print(name, years)
 
 # data sorted by year
-#print(year_data)
+print(year_data)
 # data sorted by player
-#print(player_data)
+print(player_data)
 
 # create all star dataframe from player data
 all_star_data = {'Player': [], 'Year': [], 'All-Star': []}
