@@ -465,6 +465,7 @@ player_data = {}
 # Dictionary to hold year data
 year_data = {}
 
+
 def extract_years(years_str):
     years_list = []
     # Find all occurrences of year ranges and individual years
@@ -487,10 +488,11 @@ def extract_years(years_str):
 
     return list(set(years_list))  # Return unique years only
 
+
 # Process each player
 for player in players:
     name = player.split('\t')[0]
-    #remove non alphanumeric characters besides dashes
+    # remove non alphanumeric characters besides dashes
     name = re.sub(r'[^\w\s-]', '', name)
     years_str = player.split('\t')[2]
     years = extract_years(years_str)
@@ -509,6 +511,7 @@ print(player_data)
 
 # create all star dataframe from player data
 all_star_data = {'Player': [], 'Year': [], 'All-Star': []}
+
 
 for player in player_data.keys():
     for year in player_data[player]:
@@ -545,8 +548,8 @@ all_data = all_data.drop_duplicates(subset=['Player', 'Year'])
 
 # remove unnecessary cols and split data into X, y:
 feature_cols = ['Age', 'G', 'GS', 'MP', 'FG', 'FGA', 'FG%',
-       '3P', '3PA', '3P%', '2P', '2PA', '2P%', 'eFG%', 'FT', 'FTA', 'FT%',
-       'ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS', 'Year']
+                '3P', '3PA', '3P%', '2P', '2PA', '2P%', 'eFG%', 'FT', 'FTA', 'FT%',
+                'ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS', 'Year']
 label_col = 'All-Star'
 
 feature_data = all_data[feature_cols]
