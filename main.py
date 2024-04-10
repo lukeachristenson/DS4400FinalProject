@@ -4,6 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.model_selection import cross_val_score
+from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -27,7 +28,7 @@ def LDA(X_train, y_train, X_test):
 
 def KNN(X_train, y_train, X_test):
     # cross validation
-    k_vals = [3,5,7,9,11]
+    k_vals = [3, 5, 7, 9, 11]
     mean_scores = {}
     for k in k_vals:
         knn = KNeighborsClassifier(n_neighbors=k)
@@ -48,12 +49,20 @@ def decision_tree(X_train, y_train, X_test):
     return y_pred
 
 
+def neural_network(X_train, y_train, X_test):
+    clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
+                        hidden_layer_sizes=(5, 2), random_state=1)
+    clf.fit(X_train, y_train)
+    y_pred = clf.predict(X_test)
+    return y_pred
+
+
 def eval_metrics(model, y_test, y_pred):
-    print(model+":")
-    print("Accuracy:",accuracy_score(y_test, y_pred))
+    print(model + ":")
+    print("Accuracy:", accuracy_score(y_test, y_pred))
     print("Precision:", precision_score(y_test, y_pred))
     print("Recall:", recall_score(y_test, y_pred))
-    print("F1-score:", f1_score(y_test, y_pred),"\n")
+    print("F1-score:", f1_score(y_test, y_pred), "\n")
 
 
 def main():
@@ -71,11 +80,13 @@ def main():
     lda_pred = LDA(X_train=X_train, y_train=y_train, X_test=X_test)
     knn_pred = KNN(X_train=X_train, y_train=y_train, X_test=X_test)
     dt_pred = decision_tree(X_train=X_train, y_train=y_train, X_test=X_test)
+    nn_pred = neural_network(X_train=X_train, y_train=y_train, X_test=X_test)
 
     eval_metrics("Logistic Regression", y_test, lr_pred)
     eval_metrics("LDA", y_test, lda_pred)
     eval_metrics("KNN", y_test, knn_pred)
     eval_metrics("Decision Tree", y_test, dt_pred)
+    eval_metrics("Neural Network", y_test, nn_pred)
 
 
 if __name__ == "__main__":
