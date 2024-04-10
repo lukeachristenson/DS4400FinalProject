@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.neighbors import KNeighborsClassifier
@@ -24,7 +25,7 @@ def LDA(X_train, y_train, X_test):
 
 
 def KNN(X_train, y_train, X_test):
-    knn = KNeighborsClassifier(n_neighbors=3) # can optimize later with CV
+    knn = KNeighborsClassifier(n_neighbors=3)  # can optimize later with CV
     knn.fit(X_train, y_train)
     y_pred = knn.predict(X_test)
     return y_pred
@@ -56,10 +57,10 @@ def main():
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
 
-    lr_pred = logistic_reg(X_train, X_test, y_test)
-    lda_pred = LDA(X_train, X_test, y_test)
-    knn_pred = KNN(X_train, X_test, y_test)
-    dt_pred = decision_tree(X_train, X_test, y_test)
+    lr_pred = logistic_reg(X_train=X_train, y_train=y_train, X_test=X_test)
+    lda_pred = LDA(X_train=X_train, y_train=y_train, X_test=X_test)
+    knn_pred = KNN(X_train=X_train, y_train=y_train, X_test=X_test)
+    dt_pred = decision_tree(X_train=X_train, y_train=y_train, X_test=X_test)
 
     eval_metrics("Logistic Regression", y_test, lr_pred)
     eval_metrics("LDA", y_test, lda_pred)

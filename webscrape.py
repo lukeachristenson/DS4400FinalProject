@@ -456,6 +456,7 @@ Metta World Peace[d]	1	2004		[549]
 Max Zaslofsky	1	1952		[550]"""
 
 import re
+import math
 
 # Split the string into lines for each player
 players = player_list.strip().split('\n')
@@ -547,8 +548,7 @@ for player in honorary_all_stars.keys():
 all_data = all_data.drop_duplicates(subset=['Player', 'Year'])
 
 # remove unnecessary cols and split data into X, y:
-feature_cols = ['Age', 'G', 'GS', 'MP', 'FG', 'FGA', 'FG%',
-                '3P', '3PA', '3P%', '2P', '2PA', '2P%', 'eFG%', 'FT', 'FTA', 'FT%',
+feature_cols = ['Age', 'G', 'GS', 'MP', 'FG', 'FGA', '3P', '3PA', '2P', '2PA', 'FT', 'FTA',
                 'ORB', 'DRB', 'TRB', 'AST', 'STL', 'BLK', 'TOV', 'PF', 'PTS', 'Year']
 label_col = 'All-Star'
 
