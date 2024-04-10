@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import cross_val_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -25,7 +26,16 @@ def LDA(X_train, y_train, X_test):
 
 
 def KNN(X_train, y_train, X_test):
-    knn = KNeighborsClassifier(n_neighbors=3)  # can optimize later with CV
+    # cross validation
+    k_vals = [3,5,7,9,11]
+    mean_scores = {}
+    for k in k_vals:
+        knn = KNeighborsClassifier(n_neighbors=k)
+        scores = cross_val_score(knn, X_train, y_train, cv=5)
+        mean_scores[k] = np.mean(scores)
+    best_k = max(mean_scores, key=mean_scores.get)
+
+    knn = KNeighborsClassifier(n_neighbors=best_k)
     knn.fit(X_train, y_train)
     y_pred = knn.predict(X_test)
     return y_pred
@@ -43,7 +53,7 @@ def eval_metrics(model, y_test, y_pred):
     print("Accuracy:",accuracy_score(y_test, y_pred))
     print("Precision:", precision_score(y_test, y_pred))
     print("Recall:", recall_score(y_test, y_pred))
-    print("F1-score:", f1_score(y_test, y_pred))
+    print("F1-score:", f1_score(y_test, y_pred),"\n")
 
 
 def main():
