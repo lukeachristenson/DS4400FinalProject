@@ -50,8 +50,10 @@ def decision_tree(X_train, y_train, X_test):
 
 
 def neural_network(X_train, y_train, X_test):
-    clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
-                        hidden_layer_sizes=(5, 2), random_state=1)
+    # clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
+    #                     hidden_layer_sizes=(5, 2), random_state=1)
+    clf = MLPClassifier(solver='lbfgs', alpha=1e-5, hidden_layer_sizes=(5, 2), random_state=1, max_iter=500)
+
     clf.fit(X_train, y_train)
     y_pred = clf.predict(X_test)
     return y_pred
