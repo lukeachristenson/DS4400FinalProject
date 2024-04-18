@@ -537,7 +537,7 @@ all_data = pd.merge(player_stats_df, all_star_df,
 all_data["All-Star"] = all_data['All-Star'].fillna(0)
 
 # remove 'honorary' all-star selections that were based on name recognition alone
-honorary_all_stars = {"Yao Ming": [2011], "Dwayne Wade": [2019], "Dirk Nowitzki": [2019], "Alonzo Mourning": [2001],
+honorary_all_stars = {"Yao Ming": [2011], "Dwyane Wade": [2019], "Dirk Nowitzki": [2019], "Alonzo Mourning": [2001],
                       "Kobe Bryant": [2014, 2016], "Allen Iverson": [2010]}
 
 for player in honorary_all_stars.keys():
