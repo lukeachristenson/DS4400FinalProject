@@ -10,12 +10,26 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 from webscrape import feature_data, label_data
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 
 def logistic_reg(X_train, y_train, X_test):
     lr = LogisticRegression()
     lr.fit(X_train, y_train)
     y_pred = lr.predict(X_test)
+    return y_pred
+
+def random_forest(X_train, y_train, X_test):
+    rf = RandomForestClassifier(n_estimators=50)
+    rf.fit(X_train, y_train)
+    y_pred = rf.predict(X_test)
+    return y_pred
+
+
+def adaboost(X_train, y_train, X_test):
+    ab = AdaBoostClassifier(n_estimators=50)
+    ab.fit(X_train, y_train)
+    y_pred = ab.predict(X_test)
     return y_pred
 
 
@@ -83,12 +97,16 @@ def main():
     knn_pred = KNN(X_train=X_train, y_train=y_train, X_test=X_test)
     dt_pred = decision_tree(X_train=X_train, y_train=y_train, X_test=X_test)
     nn_pred = neural_network(X_train=X_train, y_train=y_train, X_test=X_test)
+    rf_pred = random_forest(X_train=X_train, y_train=y_train, X_test=X_test)
+    ab_pred = adaboost(X_train=X_train, y_train=y_train, X_test=X_test)
 
     eval_metrics("Logistic Regression", y_test, lr_pred)
     eval_metrics("LDA", y_test, lda_pred)
     eval_metrics("KNN", y_test, knn_pred)
     eval_metrics("Decision Tree", y_test, dt_pred)
     eval_metrics("Neural Network", y_test, nn_pred)
+    eval_metrics("Random Forest", y_test, rf_pred)
+    eval_metrics("AdaBoost", y_test, ab_pred)
 
 
 if __name__ == "__main__":
